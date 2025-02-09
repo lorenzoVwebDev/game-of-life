@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=ù, initial-scale=1.0"/>
+  <meta name="viewport"/>
   <title>Game Of Life Vanilla JS</title>
   <style>
+    table {
+      border: 1px solid  black;
+      
+    }
     .cell {
-      width: 8px;
-      height: 8px;
-      border: 1px;
+      width: 25px;
+      height: 25px;
+      border: solid 1px black;
+      cursor: pointer;
     }
 
     .filled {
@@ -21,9 +26,19 @@
   </style>
 </head>
 <body>
+  <h1>Click On The Cells To Activate Them</h1>
   <table id="field" style="border: 1px solid black;"></table>
+  <button class="start-button">
+    Fill The Grid Randomly
+  </button>
+  <button class="next-gen-button">
+    Next Gen Button
+  </button>
+
   <script>
-    var size = 8;
+    var size = 50;
+    var xSize = 16;
+    var ySize = 24;
     var htmlElements;
     var cells;
     var EMPTY = 0;
@@ -33,52 +48,86 @@
         htmlElements = [];
         cells = [];
         var table = document.getElementById('field');
-        for (var y = 0; y < size; y++) {
+        table.innerHTML = '';
+        for (var y = 0; y < ySize; y++) {
           //Creating the Y rows of the table based on the ySize variable (now we are using a size that is equal for both the x-axis and the y-axis)
-          var tr = document.createElementById('tr');
+          var tr = document.createElement('tr');
           table.appendChild(tr);
           //Creating the htmlTable array by starting with the y-axis (rows)
           var rowElements = [];
           htmlElements.push(rowElements);
           //it creates the cells array that will be used to define wheter a cell is empty or not. We have to specify the xSize variable in the "new Array(xSize).fill('empty')"
-          cells.push(new Array(size).fill(EMPTY));
-          for (var x = 0; x < size; x++) {
-            //append a td element (cell) to each row in the parent loop based on the xSize
+          cells.push(new Array(xSize).fill(EMPTY));
+          for (var x = 0; x < xSize; x++) {
+            //appends a td element (cell) to each row in the parent loop based on the xSize
             var td = document.createElement('td');
-            tr.appendChild(td)
+            tr.append(td)
             //it pushes a td element at each child loop in each row created in the parent loop 
             rowElements.push(td);
           }
         }
       }
 
+      function randomInit() {
+        createField();
+        // the condition in the for loop sets that 30% (0.3) of the total cells must be alive 
+        for (var i = 0; i < Math.floor(xSize * ySize * 0.03); i++) {
+          //we are going to define the var x, y that will be used in the "do...while" loop to radomically set wich cell must be filled
+          var x, y;
+          do {
+            // It generates a random integer between 0 and less than the xSize or the ySize to determenine the y and x index of the cells array 
+            x = Math.floor(Math.random() * xSize), y = Math.floor(Math.random() * ySize);
+            //the condition verifies whether the cell is empty or not and then it fills it based on the true evaluation. Afterwards, it breaks the do..while loop because the cell has been filled. The whole algorithm of the init() function generates a total amount of filled cells equal to the 30% of the total amount of cells
+            if (cells[y][x] == EMPTY) {
+              cells[y][x] = ALIVE;
+              break;
+            }
+          } while (true);
+        } 
+        draw()
+
+      }
+
+      function init() {
+        createField()
+        for (let y=0; y < ySize; y ++) {
+          for (let x=0;x < xSize; x++) {
+            cells[y][x] = EMPTY;
+          }
+        }
+        draw()
+      }
+
       function draw() {
-        for (var y = 0; y < size; y++) {
-          for (var x = 0; x < size; x++) {
-            htmlElements[y][x].setAttribute('class', 'cell'+(cells[y][x] == 1 ? 'filled' : 'empty'))
+        for (var y = 0; y < ySize; y++) {
+          for (var x = 0; x < xSize; x++) {
+            htmlElements[y][x].setAttribute('class', 'cell '+(cells[y][x] == 1 ? 'filled' : 'empty'))
           }
         }
       }
       
       function countNeighbours(x, y) {
-        //We have passed as the function arguments the cell coordinates
         var count = 0;
-        for (dy = -1; dy <= 1; dy++) {
-          for (dx = -1; dx <= 1; dx++) {
-            var nx = (x + dx + size) % size, ny = (y + dy + size) % size;
-            count = count + cells[ny][nx];
+        // the whole loop checks all the cells surrounding the one defined by the given coordinates (x, y) whether they are 'filled' or 'empty', afterwards it counts the ammount of 'filled' cells and then return the actual number of 'filled' cells surrounding the given one even excluding it from the count. 
+        for (var dy = -1; dy <= 1; dy++) {
+          for (var dx = -1; dx <= 1; dx++) {
+              var nx = x + dx;
+              var ny = y + dy;
+              if (nx >= 0 && nx < xSize && ny >= 0 && ny < ySize) {
+                  count += cells[ny][nx];
+              }
           }
         }
-        return count - cells[y][x];
+        return count - cells[y][x]; 
       }
 
       function newGeneration() {
         var newCells = [];
-        for (var i=0; i < size; i++) {
-          newCells.push(new Array(size).fill(EMPTY));
+        for (var i=0; i < ySize; i++) {
+          newCells.push(new Array(xSize).fill(EMPTY));
         }
-        for (var y = 0; y < size; y++) {
-          for (var x = 0; x < size; x++) {
+        for (var y = 0; y < ySize; y++) {
+          for (var x = 0; x < xSize; x++) {
             var neighBours = countNeighbours(x, y);
             if (cells[y][x] == EMPTY && neighBours == 3) {
               newCells[y][x] = ALIVE;
@@ -90,28 +139,46 @@
           }
         }
         cells = newCells;
-      }
-
-      function init() {
-        createField();
-        // the condition in the for loop sets that 30% (0.3) of the total cells must be alive 
-        for (var i = 0; i < Math.floor(size * size * 0.3); i++) {
-          //we are going to define the var x, y that will be used in the "do...while" loop to radomically set wich cell must be filled
-          var x, y;
-          do {
-            // It generates a random integer between 0 and less than the xSize or the ySize to determenine the y and x index of the cells array 
-            x = Math.floor(Math.random() * size), y = Math.floor(Math.random() * size);
-            //the condition verifies whether the cell is empty or not and then it fills it based on the true evaluation. Afterwards, it breaks the do..while loop because the cell has been filled. The whole algorithm of the init() function generates a total amount of filled cells equal to the 30% of the total amount of cells
-            if (cells[y][x] == EMPTY) {
-              cells[y][x] = ALIVE;
-              break;
-            }
-          } while (true);
-        } 
         draw()
       }
 
-      init();
+      document.querySelector('.start-button').addEventListener('click', (event) => {
+        randomInit();
+        document.querySelectorAll('.cell').forEach(cell => {
+          cell.addEventListener('click', (event) => {
+            if (cell.classList[1] === 'empty') {
+              const x = event.target.cellIndex;
+              const y = event.target.parentNode.rowIndex;
+              cells[y][x] = 1;
+            } else {
+              const x = event.target.cellIndex;
+              const y = event.target.parentNode.rowIndex;
+              cells[y][x] = 0;
+            }
+            draw()
+          })
+        })
+      })
+      document.querySelector('.next-gen-button').addEventListener('click', (event) => {
+        newGeneration()
+      })
+
+      init()
+
+      document.querySelectorAll('.cell').forEach(cell => {
+          cell.addEventListener('click', (event) => {
+            if (cell.classList[1] === 'empty') {
+              const x = event.target.cellIndex;
+              const y = event.target.parentNode.rowIndex;
+              cells[y][x] = 1;
+            } else {
+              const x = event.target.cellIndex;
+              const y = event.target.parentNode.rowIndex;
+              cells[y][x] = 0;
+            }
+            draw()
+          })
+        })
   </script>
 </body>
 </html>

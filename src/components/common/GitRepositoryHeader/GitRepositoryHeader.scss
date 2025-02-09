@@ -1,0 +1,21 @@
+@import '../../../mixin';
+
+.git-repository-header {
+  background-color: white;
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  @include poppins-bold;
+  background-color: $blue-fb;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: black;
+  & a {
+    color: white;
+    @include poppins-bold;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+  }
+  border-bottom: solid 1px;
+}
