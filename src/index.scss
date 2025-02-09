@@ -17,6 +17,26 @@
 
 .main-section {
   min-height: 80vh;
+  & .table-wrapper {
+    &  table {
+      border: 1px solid  black;
+      border: 1px solid black
+    }
+    & .cell {
+      width: 25px;
+      height: 25px;
+      border: solid 1px black;
+      cursor: pointer;
+    }
+  
+    & .filled {
+      background-color: black;
+    }
+  
+    & .empty {
+      background-color: white;
+    }
+  }
 }
 
 
