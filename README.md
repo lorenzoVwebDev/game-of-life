@@ -1,5 +1,5 @@
 # [Game Of Life](https://www.lorenzo-viganego.com/#portfolio)
-  A web application based on a mvc framework that is able to log inputs, download log files and SSR a table by reading the log file 
+ The famous Game Of Life created by John Conway
 ![Features](https://img.shields.io/badge/Features-My%20frontend's%20features-green)
 
 # Connect with me
