@@ -1,10 +1,12 @@
 
-export async function requestArray(array, generation) {
+export async function requestArray(array, generation, xSize = 16, ySize = 24) {
   const response = await fetch('http://localhost:3000/textarray', {
     method: "POST",
     body: JSON.stringify({
       array,
-      generation
+      generation,
+      xSize,
+      ySize
     }),
     headers: {
       "Content-Type": "application/json"

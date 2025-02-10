@@ -1,13 +1,18 @@
 import { requestArray } from "../services/requestArray.js";
 import { checkCells } from "../utils/checkCells.js"
 export class GameOfLife {
-  xSize = 16;
-  ySize = 24;
+  xSize;
+  ySize;
   htmlElements = [];
   cells = [];
   EMPTY = 0;
   ALIVE = 1;
   generationCount = 1;
+
+  constructor(xSize = 16, ySize = 24) {
+    this.xSize = xSize;
+    this.ySize = ySize;
+  }
 
   createField() {
     var table = document.querySelector('.field');
@@ -60,20 +65,33 @@ export class GameOfLife {
 
   }
 
-  init() {
-    this.createField()
-    for (let y=0; y < this.ySize; y ++) {
-      for (let x=0;x < this.xSize; x++) {
-        this.cells[y][x] = this.EMPTY;
+  init(resize = false) {
+
+    if (resize) {
+      this.cells = [];
+      this.createField()
+      for (let y=0; y < this.ySize; y ++) {
+        for (let x=0;x < this.xSize; x++) {
+          this.cells[y][x] = this.EMPTY;
+        }
       }
+      this.draw(this.cells)
+    } else {
+      this.createField()
+      for (let y=0; y < this.ySize; y ++) {
+        for (let x=0;x < this.xSize; x++) {
+          this.cells[y][x] = this.EMPTY;
+        }
+      }
+      this.draw(this.cells, true)
     }
-    this.draw(this.cells)
   }
 
-  async draw(cells = 'default') {
-    
-    if (checkCells(cells) > 0 || !(cells === 'default')) {
-      const array = await requestArray(cells, this.generationCount);
+  async draw(cells = 'default', choosing = false) {
+
+    if ((checkCells(cells) > 0 || !(cells === 'default')) && !choosing) {
+      console.log('run')
+      const array = await requestArray(cells, this.generationCount, this.xSize, this.ySize);
       if (array) {
         this.cells = array
         for (var y = 0; y < this.ySize; y++) {
@@ -81,19 +99,29 @@ export class GameOfLife {
             this.htmlElements[y][x].setAttribute('class', 'cell '+ (this.cells[y][x] == 1 ? 'filled' : 'empty'))
           }
         }
+
+        return 'completed';
       }
 
+    } else if (choosing) {
+      for (var y = 0; y < this.ySize; y++) {
+
+        for (var x = 0; x < this.xSize; x++) {
+          this.htmlElements[y][x].setAttribute('class', 'cell '+ (this.cells[y][x] == 1 ? 'filled' : 'empty'))
+        }
+      } 
+
+      return 'completed';
     } else {
+
       for (var y = 0; y < this.ySize; y++) {
         for (var x = 0; x < this.xSize; x++) {
           this.htmlElements[y][x].setAttribute('class', 'cell '+ (this.cells[y][x] == 1 ? 'filled' : 'empty'))
         }
-      }
+      } 
+
+      return 'completed';
     }
-    
-
-
-
   }
   
   countNeighbours(x, y) {
@@ -112,7 +140,8 @@ export class GameOfLife {
     return count - this.cells[y][x]; 
   }
 
-  newGeneration() {
+  async newGeneration() {
+
     let condition = false;
     for (let y = 0; y < this.ySize; y++) {
       for (let x = 0; x < this.xSize; x++) {
@@ -123,10 +152,13 @@ export class GameOfLife {
     }
 
     if (condition) {
+
       var newCells = [];
+      console.log(typeof this.xSize)
       for (var i=0; i < this.ySize; i++) {
         newCells.push(new Array(this.xSize).fill(this.EMPTY));
       }
+      console.log(newCells)
       for (var y = 0; y < this.ySize; y++) {
         for (var x = 0; x < this.xSize; x++) {
           var neighBours = this.countNeighbours(x, y);
@@ -139,9 +171,11 @@ export class GameOfLife {
           }
         }
       }
+      
       this.cells = newCells;
       this.generationCount++;
-      this.draw(this.cells)
+
+      return await this.draw(this.cells)
     }
   }
 
