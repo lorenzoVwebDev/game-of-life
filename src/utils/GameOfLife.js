@@ -66,7 +66,7 @@ export class GameOfLife {
   }
 
   init(resize = false) {
-
+    //it resets the cells array if resize is true, then it creates the grid again based on the new values
     if (resize) {
       this.cells = [];
       this.createField()
@@ -77,9 +77,11 @@ export class GameOfLife {
       }
       this.draw(this.cells)
     } else {
+
       this.createField()
       for (let y=0; y < this.ySize; y ++) {
         for (let x=0;x < this.xSize; x++) {
+          //it gives the EMPTY value to every value of the cells' arrays 
           this.cells[y][x] = this.EMPTY;
         }
       }
@@ -88,14 +90,15 @@ export class GameOfLife {
   }
 
   async draw(cells = 'default', choosing = false) {
-
+    //draw checks whether we are requestion a new generation or just choosing the cells, it then gives the filled or the empty class at the td dom elements
     if ((checkCells(cells) > 0 || !(cells === 'default')) && !choosing) {
-      console.log('run')
+      //go in the services/requestArray.js script to have much more information about the requestArray() function 
       const array = await requestArray(cells, this.generationCount, this.xSize, this.ySize);
       if (array) {
         this.cells = array
         for (var y = 0; y < this.ySize; y++) {
           for (var x = 0; x < this.xSize; x++) {
+            //cells will be colored based on the "filled" or "empty" class
             this.htmlElements[y][x].setAttribute('class', 'cell '+ (this.cells[y][x] == 1 ? 'filled' : 'empty'))
           }
         }
@@ -141,7 +144,7 @@ export class GameOfLife {
   }
 
   async newGeneration() {
-
+    //the newGeneration checks whether at least one cell is filled and the run the code below
     let condition = false;
     for (let y = 0; y < this.ySize; y++) {
       for (let x = 0; x < this.xSize; x++) {
@@ -152,15 +155,14 @@ export class GameOfLife {
     }
 
     if (condition) {
-
+      //The code below creates a whole new multidimensional cells array that checks which filled cells the next generation must have based on the Game Of Life rules
       var newCells = [];
-      console.log(typeof this.xSize)
       for (var i=0; i < this.ySize; i++) {
         newCells.push(new Array(this.xSize).fill(this.EMPTY));
       }
-      console.log(newCells)
       for (var y = 0; y < this.ySize; y++) {
         for (var x = 0; x < this.xSize; x++) {
+          //runs the countNeighbours method to check how many neighbours a single cell has 
           var neighBours = this.countNeighbours(x, y);
           if (this.cells[y][x] == this.EMPTY && neighBours == 3) {
             newCells[y][x] = this.ALIVE;
