@@ -18,6 +18,7 @@ export class GameOfLife {
     var table = document.querySelector('.field');
     table.innerHTML = '';
     this.htmlElements = [];
+    console.log(this.htmlElements)
     for (var y = 0; y < this.ySize; y++) {
       //Creating the Y rows of the table based on the ySize variable (now we are using a size that is equal for both the x-axis and the y-axis)
       var tr = document.createElement('tr');
@@ -38,12 +39,13 @@ export class GameOfLife {
   }
 
   randomInit() {
-    this.cells = [];
-    this.createField();
+    var newCells = [];
+/*     this.createField(); */
     // the condition in the for loop sets that 30% (0.3) of the total cells must be alive 
     for (let y = 0; y < this.ySize; y++) {
+      newCells.push(new Array(this.xSize).fill(this.EMPTY));
       for (let x = 0; x < this.xSize; x++) {
-        this.cells[y][x] = this.EMPTY;
+        newCells[y][x] = this.EMPTY;
       }
     }
 
@@ -56,12 +58,14 @@ export class GameOfLife {
         x = Math.floor(Math.random() * this.xSize) 
         y = Math.floor(Math.random() * this.ySize);
         //the condition verifies whether the cell is empty or not and then it fills it based on the true evaluation. Afterwards, it breaks the do..while loop because the cell has been filled. The whole algorithm of the init() function generates a total amount of filled cells equal to the 30% of the total amount of cells
-        if (this.cells[y][x] == this.EMPTY) {
-          this.cells[y][x] = this.ALIVE;
+        if (newCells[y][x] == this.EMPTY) {
+          newCells[y][x] = this.ALIVE;
           break;
         }
       } while (true);
     } 
+
+    this.cells = newCells
     this.draw(this.cells)
 
   }

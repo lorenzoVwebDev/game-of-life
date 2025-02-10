@@ -9,7 +9,8 @@ function Table() {
   const [ cells, setCells] = useState([])
   const [ interId, setInterId] = useState(false)
   let ref = useRef(false)
-
+  let ref2 = useRef()
+  
   useEffect(() => {
     let loopActive = false
     const automatic = async () => {
@@ -42,6 +43,30 @@ function Table() {
     }
   }, [interId])
 
+  const handleClick = (event) => {
+    addClick(event, event.currentTarget);
+  };
+
+  const addClick = (event, cell) => {
+    console.log('hello')
+    try {              
+        if (cell.classList[1] === 'empty') {
+        const x = event.target.cellIndex;
+        const y = event.target.parentNode.rowIndex;
+        golInstance.cells[y][x] = 1;
+      } else {
+        const x = event.target.cellIndex;
+        const y = event.target.parentNode.rowIndex;
+        golInstance.cells[y][x] = 0;
+      }
+
+      golInstance.draw('default', true)
+      //the setReload useState method is used to compel the re-rendering of the component
+      setReload(setReload((state) => state = true))
+    } catch (err) {
+      console.error(err)
+    }
+  }
   return (
     <div className="table-wrapper">
     <h1>Click On The Cells To Activate Them</h1>
@@ -49,26 +74,8 @@ function Table() {
         {/* I prefered to loop over the htmlElements array (that contains tr and td references used to set the class attribute of them in the draw() method of the GameOfLife instance ) instead of mapping an array to render jsx. I can easily handle conditions and use the addEventListener's callback to properly manage cells' toggling */}
         {reload && golInstance.htmlElements.forEach(row => {
           row.forEach(cell => {
- 
-            cell.addEventListener('click', (event) => {
-              try {              
-                  if (cell.classList[1] === 'empty') {
-                  const x = event.target.cellIndex;
-                  const y = event.target.parentNode.rowIndex;
-                  golInstance.cells[y][x] = 1;
-                } else {
-                  const x = event.target.cellIndex;
-                  const y = event.target.parentNode.rowIndex;
-                  golInstance.cells[y][x] = 0;
-                }
-
-                golInstance.draw('default', true)
-                //the setReload useState method is used to compel the re-rendering of the component
-                setReload(setReload((state) => state = true))
-              } catch (err) {
-                console.error(err)
-              }
-            })
+            cell.removeEventListener('click', handleClick)
+            cell.addEventListener('click', handleClick)
           })
         })}
       </table>
@@ -77,7 +84,7 @@ function Table() {
           //generates a random init input and sets the generationCount at 1
           golInstance.generationCount = 1;
           golInstance.randomInit();
-          setCells(golInstance.cells)
+          ref2 = golInstance.cells
         }}>
           Fill The Grid Randomly
         </button>
