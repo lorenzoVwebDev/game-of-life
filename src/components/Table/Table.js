@@ -4,7 +4,6 @@ import { GameOfLife } from "../../utils/GameOfLife.js";
 const golInstance = new GameOfLife();
 
 function Table() {
-
   const [ reload, setReload] = useState(false)
   const [ cells, setCells] = useState([])
   const [ interId, setInterId] = useState(false)
@@ -13,14 +12,19 @@ function Table() {
   useEffect(() => {
     let loopActive = false
     const automatic = async () => {
-      while (loopActive) {
-        if (golInstance.generationCount === 1) {
-          setCells(golInstance.cells)
+      //Loop that handles the "Start" button input to run new generations over and over again; it relies on the useEffect return callback that runs after the dependecy is modified again, in this case it sets loopActive as false again and stops the loop 
+      try {
+        while (loopActive) {
+          if (golInstance.generationCount === 1) {
+            setCells(golInstance.cells)
+          }
+          const response = await golInstance.newGeneration();
+      
+          await new Promise(resolve => setTimeout(resolve, 2000));
         }
-        const response = await golInstance.newGeneration();
-    
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      }
+      } catch (err) {
+      console.error(err)
+    }
     }
 
     if (interId) {
@@ -30,6 +34,7 @@ function Table() {
         loopActive = false;
       }
     } else if (!interId && golInstance.generationCount === 1) {
+      //The useEffect hook is used even to render the grid after the component finishes its first lifecycle
       golInstance.init();
       setReload((state) => state = true);
       return () => {
@@ -44,20 +49,17 @@ function Table() {
       <table className="field">
         {reload && golInstance.htmlElements.forEach(row => {
           row.forEach(cell => {
+            
             cell.addEventListener('click', (event) => {
               
               if (cell.classList[1] === 'empty') {
                 const x = event.target.cellIndex;
                 const y = event.target.parentNode.rowIndex;
                 golInstance.cells[y][x] = 1;
-/*                 console.log('loop 1')
-                console.log(cell.classList[1]) */
               } else {
                 const x = event.target.cellIndex;
                 const y = event.target.parentNode.rowIndex;
                 golInstance.cells[y][x] = 0;
-/*                 console.log('loop 2')
-                console.log(cell.classList[1]) */
               }
 
               golInstance.draw('default', true)
@@ -123,8 +125,6 @@ function Table() {
           const resize = true; 
           golInstance.xSize = parseInt(event.target[0].value);
           golInstance.ySize = parseInt(event.target[1].value);
-          console.log(typeof golInstance.xSize)
-          console.log(typeof golInstance.ySize)
           golInstance.init(resize);
           setReload((state) => state = true);
         }}>
