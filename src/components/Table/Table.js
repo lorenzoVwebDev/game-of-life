@@ -72,7 +72,8 @@ function Table() {
           })
         })}
       </table>
-        <button className="start-button" onClick={() => {
+      <div className="buttons-section">
+        <button className="random-button" onClick={() => {
           //generates a random init input and sets the generationCount at 1
           golInstance.generationCount = 1;
           golInstance.randomInit();
@@ -105,7 +106,7 @@ function Table() {
         }>
           Next Gen Button
         </button>
-        <button onClick={
+        <button className="start-button"onClick={
           //toggles the interId boolean to run the useEffect hooks
           () => {
               if (interId) {
@@ -117,7 +118,7 @@ function Table() {
         }>
           {!interId ? 'Start' : 'Stop'}
         </button>
-        <button onClick={
+        <button className="reset-button" onClick={
           //It set the cells as they were during the first generation and draws the whole component again
           () => {
             try {
@@ -153,6 +154,7 @@ function Table() {
           <input type="number" placeholder="set grid's heigth" min="0" max="100" required/>
           <input type="submit" placeholder='submit'/>
         </form>
+        </div>
     </div>
   )
 }

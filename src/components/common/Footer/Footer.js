@@ -67,7 +67,7 @@ function Footer() {
               Abstract
             </h6>
             <p>
-              A Project that involves the usage of the redux-library in React. Very useful to manage both states and states' reducers.
+              The famous Game of Life, made by John Horton Conway.
             </p>
           </div>
           {/*central part*/}
@@ -79,7 +79,7 @@ function Footer() {
               <a href="https://react.dev/">React</a>
             </p>
             <p>
-              <a href="https://redux.dev/">Redux</a>
+              <a href="https://github.com/lorenzoVwebDev/PortfolioBackend">My API</a>
             </p>
             <p>
               <a href="https://sass-lang.com/">Sass</a>

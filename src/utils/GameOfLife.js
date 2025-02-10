@@ -9,7 +9,7 @@ export class GameOfLife {
   ALIVE = 1;
   generationCount = 1;
 
-  constructor(xSize = 16, ySize = 24) {
+  constructor(xSize = 24, ySize = 16) {
     this.xSize = xSize;
     this.ySize = ySize;
   }
@@ -38,6 +38,7 @@ export class GameOfLife {
   }
 
   randomInit() {
+    this.cells = [];
     this.createField();
     // the condition in the for loop sets that 30% (0.3) of the total cells must be alive 
     for (let y = 0; y < this.ySize; y++) {
