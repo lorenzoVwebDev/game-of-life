@@ -1,9 +1,34 @@
+import { useState, useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 
 function Dashboard(props) {
+  const [state, setState] = useState(false)
+  let {ref2, ref1, setInterId, interId, cells, golInstance, setReload, setCells, dispatch, bool} = props;
+  
 
-  let {ref2, ref1, setInterId, interId, cells, golInstance, setReload, setCells} = props;
+  useEffect(() => {
+    let componentMount = true;
+    const dashboard = document.querySelector(".dashboard-section");
+    setState(true)
+    if (bool) {
+      dashboard.classList.add('expanded')
+    } 
+
+    return (() => {
+      dashboard.classList.remove('expanded')
+      componentMount = false;
+    })
+  }, [bool])
+
+
   return (
-    <div className="buttons-section">
+    <div className="dashboard-section">
+            <button className="toggled-dashboard" onClick={
+        () => {
+          dispatch(false)
+        }
+      }><i className='bx bxs-book-content book-logo'></i><h3>Dashboard</h3></button>
+
     <button className="random-button" onClick={() => {
       //generates a random init input and sets the generationCount at 1
       golInstance.generationCount = 1;
@@ -37,7 +62,7 @@ function Dashboard(props) {
     }>
       Next Gen Button
     </button>
-    <button className="start-button"onClick={
+{/*   <button className="start-button"onClick={
       //toggles the interId boolean to run the useEffect hooks
       () => {
           if (interId) {
@@ -48,7 +73,22 @@ function Dashboard(props) {
       }
     }>
       {!interId ? 'Start' : 'Stop'}
-    </button>
+    </button>  */}
+     <label className="start-button">
+      <input 
+        type="checkbox" 
+        checked={interId} 
+        onChange={() => {
+          if (interId) {
+            setInterId(false)
+          } else {
+            setInterId(true)
+          }
+        }} 
+      />
+      <span className="slider"></span>
+      Breeding
+    </label>
     <button className="reset-button" onClick={
       //It set the cells as they were during the first generation and draws the whole component again
       () => {

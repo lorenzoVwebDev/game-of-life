@@ -1,17 +1,23 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useReducer, useRef, lazy, Suspense } from 'react';
 import { GameOfLife } from "../../utils/GameOfLife.js";
-import Dashboard from '../Dashboard/Dashboard.js';
-
+import Dashboard  from '../Dashboard/Dashboard.js';
+/* const Dashboard = lazy(() => import('../Dashboard/Dashboard.js')) */
+function reducer(state, action) {
+  return state = action
+}
 const golInstance = new GameOfLife();
 
-function Table() {
 
+function Table() {
   const [ reload, setReload] = useState(false)
   const [ cells, setCells] = useState([])
   const [ interId, setInterId] = useState(false)
+  const [ bool, dispatch ] = useReducer(reducer, false)
+  const [ expanded, setExpanded ] = useState(false);
+
   let ref1 = useRef(false)
   let ref2 = useRef()
-  
+
   useEffect(() => {
     let loopActive = false
     const automatic = async () => {
@@ -70,8 +76,14 @@ function Table() {
   }
 
   return (
-    <div className="table-wrapper">
+    <div className="main-wrapper">
+      <button className="toggle-dashboard" onClick={
+        (event) => {
+          dispatch(true)
+        }
+      }><i className='bx bx-book-content book-closed'></i></button>
     <h1>Click On The Cells To Activate Them</h1>
+    <div className="table-wrapper">
       <table className="field">
         {/* I prefered to loop over the htmlElements array (that contains tr and td references used to set the class attribute of them in the draw() method of the GameOfLife instance ) instead of mapping an array to render jsx. I can easily handle conditions and use the addEventListener's callback to properly manage cells' toggling */}
         {reload && golInstance.htmlElements.forEach(row => {
@@ -81,22 +93,22 @@ function Table() {
           })
         })}
       </table>
+      </div>
+        {
+        bool &&
         <Dashboard
-/*           generationCount={golInstance.generationCount}
-          randomInit={golInstance.randomInit} */
-          ref2={ref2}
-/*           golInstanceCells={golInstance.cells} */
-          ref1={ref1}
-/*           newGeneration={golInstance.newGeneration} */
-          setInterId={setInterId}
-          interId={interId}
-          cells={cells}
-/*           setCells={golInstance.setCells} */
-/*           draw={golInstance.draw} */
-          golInstance={golInstance}
-          setReload={setReload}
-          setCells={setCells}
-        />
+                  ref2={ref2}
+                  ref1={ref1}
+                  setInterId={setInterId}
+                  interId={interId}
+                  cells={cells}
+                  golInstance={golInstance}
+                  setReload={setReload}
+                  setCells={setCells}
+                  bool={bool}
+                  dispatch={dispatch}
+                />
+      }
     </div>
   )
 }
