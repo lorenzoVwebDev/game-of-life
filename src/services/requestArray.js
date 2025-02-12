@@ -1,4 +1,4 @@
-//The requestArray function sends a POST request to my backend. It will send a json string that contains all the information need to write and then read the text file needed to portray every new generation; check the comment below or visit my backend repository to wathc the express code that manages the request/response : https://github.com/lorenzoVwebDev/PortfolioBackend/blob/main/controllers/readFileController.js
+//The requestArray function sends a POST request to my backend. It will send a json string that contains all the information needed to write and then read the text file needed to portray every new generation; check the comment below or visit my backend repository to wathc the express code that manages the request/response : https://github.com/lorenzoVwebDev/PortfolioBackend/blob/main/controllers/readFileController.js
 const localhost = 'http://localhost:3000/';
 const backend = 'https://backend.lorenzo-viganego.com/';
 

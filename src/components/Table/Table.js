@@ -20,6 +20,7 @@ function Table() {
 
   useEffect(() => {
     let loopActive = false
+    //The useEffect hook is used to launch the automatic breeding every time we change the interId dependency, the while loop below waits for the response to be completed and then it waits for the Promise to resolve;
     const automatic = async () => {
       try {
         while (loopActive) {
@@ -41,7 +42,8 @@ function Table() {
       return () => {
         loopActive = false;
       }
-    } else if (!interId && golInstance.generationCount === 1) {
+    } else if (!interId && golInstance.generationCount === 1 ) {
+      //is it also used to init the grid once that the component is fully loaded
       golInstance.init();
       setReload((state) => state = true);
       return () => {
@@ -79,9 +81,12 @@ function Table() {
     <div className="main-wrapper">
       <button className="toggle-dashboard" onClick={
         (event) => {
+          document.querySelector('.toggle-dashboard').classList.add('off');
+          setExpanded((state) => !state)
           dispatch(true)
+          setReload(setReload((state) => state = true))
         }
-      }><i className='bx bx-book-content book-closed'></i></button>
+      }>Dashboard<i className='bx bx-book-content book-closed'></i></button>
     <h1>Click On The Cells To Activate Them</h1>
     <div className="table-wrapper">
       <table className="field">
@@ -93,9 +98,11 @@ function Table() {
           })
         })}
       </table>
+      {/* A simple && operator to mount the Dashboard component if requested by clicking on the toggle-dashboard button */}
       </div>
         {
         bool &&
+        /* props injection */
         <Dashboard
                   ref2={ref2}
                   ref1={ref1}

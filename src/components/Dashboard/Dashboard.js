@@ -11,20 +11,24 @@ function Dashboard(props) {
     const dashboard = document.querySelector(".dashboard-section");
     setState(true)
     if (bool) {
-      dashboard.classList.add('expanded')
+      setTimeout(() => {
+        dashboard.classList.add('expanded')
+      }, 100)
+
     } 
 
     return (() => {
       dashboard.classList.remove('expanded')
       componentMount = false;
     })
-  }, [bool])
+  }, [])
 
 
   return (
     <div className="dashboard-section">
             <button className="toggled-dashboard" onClick={
         () => {
+          document.querySelector('.toggle-dashboard').classList.remove('off');
           dispatch(false)
         }
       }><i className='bx bxs-book-content book-logo'></i><h3>Dashboard</h3></button>

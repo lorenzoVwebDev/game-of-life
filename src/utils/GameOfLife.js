@@ -18,7 +18,6 @@ export class GameOfLife {
     var table = document.querySelector('.field');
     table.innerHTML = '';
     this.htmlElements = [];
-    console.log(this.htmlElements)
     for (var y = 0; y < this.ySize; y++) {
       //Creating the Y rows of the table based on the ySize variable (now we are using a size that is equal for both the x-axis and the y-axis)
       var tr = document.createElement('tr');
