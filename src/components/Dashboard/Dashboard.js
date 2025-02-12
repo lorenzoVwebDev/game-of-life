@@ -5,7 +5,7 @@ function Dashboard(props) {
   const [state, setState] = useState(false)
   let {ref2, ref1, setInterId, interId, cells, golInstance, setReload, setCells, dispatch, bool} = props;
   
-
+  //useEffect is used to manage the dashboard-section style rendering after the component mounts; it also waits 100 ms before adding the expanded class to ensure a smooth as well as precise rendering.
   useEffect(() => {
     let componentMount = true;
     const dashboard = document.querySelector(".dashboard-section");
@@ -34,7 +34,7 @@ function Dashboard(props) {
       }><i className='bx bxs-book-content book-logo'></i><h3>Dashboard</h3></button>
 
     <button className="random-button" onClick={() => {
-      //generates a random init input and sets the generationCount at 1
+      //it generates a random init input and sets the generationCount at 1
       golInstance.generationCount = 1;
       golInstance.randomInit();
       ref2 = golInstance.cells
@@ -48,13 +48,15 @@ function Dashboard(props) {
             setCells(golInstance.cells)
             ref1.current = false;
             const completed = await golInstance.newGeneration()
+            setReload(setReload((state) => state = true))
             if (completed === 'completed') {
-              //useRef is used to check whether the code has finished to run before allowing anothe "next gen button" input
+              //useRef is used to check whether the code has finished running before allowing another "next gen button" input.
               ref1.current = true;
             }
           } else if (ref1.current === true) {
             ref1.current = false;
             const completed = await golInstance.newGeneration()
+            setReload(setReload((state) => state = true))
             if (completed === 'completed') {
               ref1.current = true;
             }
@@ -66,18 +68,8 @@ function Dashboard(props) {
     }>
       Next Gen Button
     </button>
-{/*   <button className="start-button"onClick={
-      //toggles the interId boolean to run the useEffect hooks
-      () => {
-          if (interId) {
-            setInterId(false)
-          } else {
-            setInterId(true)
-          }
-      }
-    }>
-      {!interId ? 'Start' : 'Stop'}
-    </button>  */}
+    <div className="auto-breeding">
+    <h5>Auto Breeding</h5>
      <label className="start-button">
       <input 
         type="checkbox" 
@@ -91,10 +83,10 @@ function Dashboard(props) {
         }} 
       />
       <span className="slider"></span>
-      Breeding
     </label>
+    </div>
     <button className="reset-button" onClick={
-      //It set the cells as they were during the first generation and draws the whole component again
+      //It sets the cells as they were during the first generation and draws the whole component again.
       () => {
         try {
           if (cells.length === 0) {
@@ -112,11 +104,11 @@ function Dashboard(props) {
     </button>
     <form onSubmit={(event) => {
       try {
-        //Code used to resize the whole project based on the given values in the input
+        //The ode is used to resize the whole project based on the given values in the input
         event.preventDefault();
         event.stopPropagation();
         const resize = true; 
-        //parseInt used to convert string value to number
+        //parseInt is used to convert string value to number
         golInstance.xSize = parseInt(event.target[0].value);
         golInstance.ySize = parseInt(event.target[1].value);
         golInstance.init(resize);

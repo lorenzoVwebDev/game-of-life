@@ -20,7 +20,7 @@ function Table() {
 
   useEffect(() => {
     let loopActive = false
-    //The useEffect hook is used to launch the automatic breeding every time we change the interId dependency, the while loop below waits for the response to be completed and then it waits for the Promise to resolve;
+    //The useEffect hook is used to launch the automatic breeding every time we change the interId dependency; the while loop below waits for the response to be completed, and then it waits for the Promise to resolve;
     const automatic = async () => {
       try {
         while (loopActive) {
@@ -43,7 +43,7 @@ function Table() {
         loopActive = false;
       }
     } else if (!interId && golInstance.generationCount === 1 ) {
-      //is it also used to init the grid once that the component is fully loaded
+//it is also used to init the grid once the component is fully loaded.
       golInstance.init();
       setReload((state) => state = true);
       return () => {
@@ -70,7 +70,7 @@ function Table() {
       }
 
       golInstance.draw('default', true)
-      //the setReload useState method is used to compel the re-rendering of the component
+      //the setReload useState's method is used to compel the re-rendering of the component.
       setReload(setReload((state) => state = true))
     } catch (err) {
       console.error(err)
@@ -90,7 +90,7 @@ function Table() {
     <h1>Click On The Cells To Activate Them</h1>
     <div className="table-wrapper">
       <table className="field">
-        {/* I prefered to loop over the htmlElements array (that contains tr and td references used to set the class attribute of them in the draw() method of the GameOfLife instance ) instead of mapping an array to render jsx. I can easily handle conditions and use the addEventListener's callback to properly manage cells' toggling */}
+        {/* I preferred to loop over the htmlElements array (that contains tr and td references used to set the class attribute of them in the draw() method of the GameOfLife instance instead of mapping an array to render jsx. I can easily handle conditions and use the addEventListener's callback to properly manage cells' toggling.*/}
         {reload && golInstance.htmlElements.forEach(row => {
           row.forEach(cell => {
             cell.removeEventListener('click', handleClick)

@@ -25,7 +25,7 @@ export class GameOfLife {
       //Creating the htmlTable array by starting with the y-axis (rows)
       var rowElements = [];
       this.htmlElements.push(rowElements);
-      //it creates the cells array that will be used to define wheter a cell is empty or not. We have to specify the xSize variable in the "new Array(xSize).fill('empty')"
+      //it creates the cells array that will be used to define whether a cell is empty or not. We have to specify the xSize variable in the "new Array(xSize).fill('empty')"
       this.cells.push(new Array(this.xSize).fill(this.EMPTY));
       for (var x = 0; x < this.xSize; x++) {
         //appends a td element (cell) to each row in the parent loop based on the xSize
@@ -49,14 +49,14 @@ export class GameOfLife {
     }
 
     for (var i = 0; i < Math.floor(this.xSize * this.ySize * 0.03); i++) {
-      //we are going to define the var x, y that will be used in the "do...while" loop to radomically set wich cell must be filled
+      //we are going to define the var x, y that will be used in the "do...while" loop to randomly set which cell must be filled
       var x; 
       var y;
       do {
-        // It generates a random integer between 0 and less than the xSize or the ySize to determenine the y and x index of the cells array 
+        // It generates a random integer between 0 and less than the xSize or the ySize to determine the y and x index of the cells array. 
         x = Math.floor(Math.random() * this.xSize) 
         y = Math.floor(Math.random() * this.ySize);
-        //the condition verifies whether the cell is empty or not and then it fills it based on the true evaluation. Afterwards, it breaks the do..while loop because the cell has been filled. The whole algorithm of the init() function generates a total amount of filled cells equal to the 30% of the total amount of cells
+        //the condition verifies whether the cell is empty or not, and then it fills it based on the true evaluation. Afterwards, it breaks the do..while loop because the cell has been filled. The whole algorithm of the init() function generates a total amount of filled cells equal to 30% of the total amount of cells.
         if (newCells[y][x] == this.EMPTY) {
           newCells[y][x] = this.ALIVE;
           break;
@@ -94,7 +94,7 @@ export class GameOfLife {
   }
 
   async draw(cells = 'default', choosing = false) {
-    //draw checks whether we are requestion a new generation or just choosing the cells, it then gives the filled or the empty class at the td dom elements
+    //draw checks whether we are requesting a new generation or just choosing the cells; it then gives the filled or the empty class at the td dom elements.
     if ((checkCells(cells) > 0 || !(cells === 'default')) && !choosing) {
       //go in the services/requestArray.js script to have much more information about the requestArray() function 
       const array = await requestArray(cells, this.generationCount, this.xSize, this.ySize);
@@ -102,7 +102,7 @@ export class GameOfLife {
         this.cells = array
         for (var y = 0; y < this.ySize; y++) {
           for (var x = 0; x < this.xSize; x++) {
-            //cells will be colored based on the "filled" or "empty" class
+            //cells will be coloured based on the "filled" or "empty" class
             this.htmlElements[y][x].setAttribute('class', 'cell '+ (this.cells[y][x] == 1 ? 'filled' : 'empty'))
           }
         }
@@ -133,7 +133,7 @@ export class GameOfLife {
   
   countNeighbours(x, y) {
     var count = 0;
-    // the whole loop checks all the cells surrounding the one defined by the given coordinates (x, y) whether they are 'filled' or 'empty', afterwards it counts the ammount of 'filled' cells and then return the actual number of 'filled' cells surrounding the given one even excluding it from the count. 
+  // The whole loop checks all the cells surrounding the one defined by the given coordinates (x, y), whether they are 'filled' or 'empty'; afterwards, it counts the amount of 'filled' cells and then returns the actual number of 'filled' cells surrounding the given one, even excluding it from the count.
     for (var dy = -1; dy <= 1; dy++) {
       for (var dx = -1; dx <= 1; dx++) {
           var nx = x + dx;
@@ -148,7 +148,7 @@ export class GameOfLife {
   }
 
   async newGeneration() {
-    //the newGeneration checks whether at least one cell is filled and the run the code below
+    //the newGeneration checks whether at least one cell is filled and then runs the code below
     let condition = false;
     for (let y = 0; y < this.ySize; y++) {
       for (let x = 0; x < this.xSize; x++) {

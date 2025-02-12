@@ -157,8 +157,8 @@ function Footer() {
       </div>
       {/*low footer section*/}
       <div className="low-footer-section">
-        <span>Copyright © 2024</span>
-        <a href="https://www.lorenzo-viganego.com/">Copyright © 2024 by Lorenzo Viganego || All Rights Reserved.</a>
+        <span>Copyright © 2025</span>
+        <a href="https://www.lorenzo-viganego.com/">Copyright © 2025 by Lorenzo Viganego || All Rights Reserved.</a>
       </div>
     </footer>
   )
